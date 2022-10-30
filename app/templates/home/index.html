@@ -20,11 +20,11 @@
           <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
         </div>
         <div class="col-sm-4 offset-md-1 py-4">
-          <h4 class="text-white">Contato</h4>
+          <h4 class="text-white">Opções</h4>
           <ul class="list-unstyled">
-            <li><a href="#" class="text-white">Follow on Twitter</a></li>
-            <li><a href="#" class="text-white">Like on Facebook</a></li>
-            <li><a href="#" class="text-white">Email me</a></li>
+            <li><a href="{{url_for('users.login')}}" class="text-white">Login</a></li>
+            <li><a href="#" class="text-white">Menu - Cardápio</a></li>
+            <li><a href="#" class="text-white">Contate o desenvolvedor</a></li>
           </ul>
         </div>
       </div>
@@ -43,6 +43,15 @@
 </header>
 
 <main>
+    {% with messages = get_flashed_messages(with_categories=true)%}
+      {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+                {{message}}
+            </div>
+          {% endfor %}
+      {%endif%}
+    {%endwith%}
     <main>
       <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">

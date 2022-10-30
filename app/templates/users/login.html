@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/login.css')}}"/>
+   
+  </head>
+  <body class="text-center">
+    <main class="form-signin w-100 m-auto">
+      <form method="POST" action="">
+        {{form.hidden_tag()}}
+        <h1 class="h3 mb-3 fw-normal">Por favor, logar.</h1>
+
+        <div class="form-floating">
+          {% if form.login.errors %}
+            {{form.login(class="form-control is-invalid", placeholder='Endereço de E-mail')}}
+            <div class="invalid-feedback">
+              {% for error in form.login.errors %}
+                    <span> {{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{form.login(class="form-control", placeholder='Endereço de E-mail')}}
+          {% endif %}
+          {{form.login.label()}}
+        </div>
+        <div class="form-floating">
+          {% if form.password.errors %}
+            {{form.password(class="form-control is-invalid", placeholder='Senha')}}
+            <div class="invalid-feedback">
+              {% for error in form.password.errors %}
+                    <span> {{ error }}</span>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{form.password(class="form-control", placeholder='Senha')}}
+          {% endif %}
+          {{form.password.label()}}
+        </div>
+
+        <div class="checkbox mb-3">
+          {{form.remember()}}
+          {{form.remember.label()}}
+        </div>
+        {{form.submit(class='w-100 btn btn-lg btn-primary')}}
+        
+        <p class="mt-5 mb-3 text-muted">&copy; 2022</p>
+      </form>
+    </main>
+  </body>
+</html>
