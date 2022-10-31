@@ -1,0 +1,21 @@
+laches = (id, nome, valor, ingredites)
+mesas = (id, numero, livre)
+pedidos = (id, dataHora, codPedido, idMesa)
+entregas = (id, taxaEntrega, idPedidos)
+users = (id, nome, email, password)
+telefones = (id, idUsers, telefones)
+acessos = (id, tipo)
+enderecos = (id, rua, numero, cidade, bairro, cep, principal)
+
+entregaUsers = (idEntrega, idUsers)
+pedidoUsers = (idPedido, idUsers)
+enderecoUsers = (idUsers, idEndereco)
+acessoUsers = (idUsers, idAcesso)
+pedidoLanches = (idLanche, idPedido)
+
+
+
+
+
+
+
