@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EternusLanches</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}"/>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/carousel.css')}}"/>
+  </head>
+  <body>
+    
+<header>
+  <div class="collapse bg-warning" id="navbarHeader">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">Sobre</h4>
+          <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Opções</h4>
+          <ul class="list-unstyled">
+            {% if current_user.is_authenticated %}
+              <li><a href="{{url_for('users.logout')}}" class="text-white">Logof</a></li>
+            {% else %}
+              <li><a href="{{url_for('users.login')}}" class="text-white">Login</a></li>
+            {% endif %}
+            <li><a href="#" class="text-white">Menu - Cardápio</a></li>
+            <li><a href="#" class="text-white">Contate o desenvolvedor</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-dark bg-warning shadow-sm">
+    <div class="container">
+      <a href="{{url_for('home.index')}}" class="navbar-brand d-flex align-items-center">
+        <strong class="display-6">Eternus Lanches</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+</header>
+{% with messages = get_flashed_messages(with_categories=true)%}
+  {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{category}}">
+            {{message}}
+        </div>
+      {% endfor %}
+  {%endif%}
+{%endwith%}
+<main>
+    {% block content %} {% endblock content %}
+</main>
+
+<footer class="text-muted py-5">
+  <div class="container">
+    <p class="float-end mb-1">
+      <a href="#">Voltar ao Início</a>
+    </p>
+    <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
+    <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/5.2/getting-started/introduction/">getting started guide</a>.</p>
+  </div>
+</footer>
+<script src="{{url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+      
+  </body>
+</html>

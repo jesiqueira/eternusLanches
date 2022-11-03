@@ -1,0 +1,222 @@
+{% extends 'layout/layout.html'%}
+
+{% block content %}
+    <form action="" method="POST">
+        {{form.hidden_tag()}}
+        <div class="container mt-4">
+            <fieldset >
+                <legend class="text-center text-warning">Preencha todos os campos para se cadastrar</legend>
+                <div class="row">
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Nome</span>
+                            {% if form.nome.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.nome(class='form-control is-invalid', placeholder='Informe seu nome')}}
+                                    {{form.nome.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.nome.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.nome(class='form-control', placeholder='Informe seu nome')}}
+                                    {{form.nome.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">E-mail</span>
+                            {% if form.email.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.email(class='form-control is-invalid', placeholder='Informe seu email')}}
+                                    {{form.email.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.email(class='form-control', placeholder='Informe seu email')}}
+                                    {{form.email.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">***</span>
+                            {% if form.password.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.password(class='form-control is-invalid', placeholder='password')}}
+                                    {{form.password.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.password(class='form-control', placeholder='password')}}
+                                    {{form.password.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">***</span>
+                            {% if form.confirmePassword.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.confirmePassword(class='form-control is-invalid', placeholder='confirme')}}
+                                    {{form.confirmePassword.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.confirmePassword.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.confirmePassword(class='form-control', placeholder='Confirme')}}
+                                    {{form.confirmePassword.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Cidade</span>
+                            {% if form.cidade.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.cidade(class='form-control is-invalid', placeholder='Cidade')}}
+                                    {{form.cidade.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.cidade.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.cidade(class='form-control', placeholder='Cidade')}}
+                                    {{form.cidade.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Rua</span>
+                            {% if form.rua.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.rua(class='form-control is-invalid', placeholder='rua')}}
+                                    {{form.rua.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.rua.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.rua(class='form-control', placeholder='Rua')}}
+                                    {{form.rua.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Bairro</span>
+                            {% if form.bairro.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.bairro(class='form-control is-invalid', placeholder='bairro')}}
+                                    {{form.bairro.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.bairro.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.bairro(class='form-control', placeholder='bairro')}}
+                                    {{form.bairro.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Número</span>
+                            {% if form.numero.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.numero(class='form-control is-invalid', placeholder='numero')}}
+                                    {{form.numero.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.numero.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.numero(class='form-control', placeholder='numero')}}
+                                    {{form.numero.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Cep</span>
+                            {% if form.cep.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.cep(class='form-control is-invalid', placeholder='cep')}}
+                                    {{form.cep.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.cep.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.cep(class='form-control', placeholder='cep')}}
+                                    {{form.cep.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                <!-- {% for campo, erros in form.errors.items() %} 
+                    <div class="alert alert-danger" role="alert"> # aqui você pode estilizar como quiser 
+                    {{ form[campo].label }} : {{''.join(erros)}}</h5>
+                    </div>
+                {% endfor %} -->
+                <div class="row align-items-center mt-3">
+                    {{form.submit(class="btn btn-primary mt-3")}}
+                </div>
+            </fieldset>
+        </div>
+    </form>
+{% endblock content %}

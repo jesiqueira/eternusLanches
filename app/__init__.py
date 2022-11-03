@@ -19,7 +19,7 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
-    # login_manager.init_app(app)
+    login_manager.init_app(app)
     manager = Manager(app)
     manager.add_command('db', MigrateCommand)
 
