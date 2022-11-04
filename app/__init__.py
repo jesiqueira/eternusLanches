@@ -26,9 +26,11 @@ def create_app(config_class=Config):
     # Rotas
     from app.controllers.home.routes import home
     from app.controllers.users.routes import users
+    from app.controllers.lanchonete.routes import lanchonete
 
     # Registrar Blueprint
     app.register_blueprint(home)
     app.register_blueprint(users)
+    app.register_blueprint(lanchonete)
 
     return manager

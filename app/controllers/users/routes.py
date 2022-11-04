@@ -95,16 +95,21 @@ def createUser():
                 db.session.flush()
                 db.session.rollback()
             
-            try:
-                acesso = Acessos.query.filter_by(tipo='Cliente').first()
-                users = Users(nome=form.nome.data.title(), email=form.email.data.lower(), password=bcrypt.generate_password_hash(form.password.data).decode('utf-8'), endereco=[endereco], acesso=[acesso])
-                db.session.add(users)
-                db.session.commit()
-            except Exception as e:
-                print(f'Error: {e}')
-                db.session.flush()
-                db.session.rollback()
-            flash('Usuário criado com sucesso.', 'success')
-            return redirect(url_for('users.login'))
+            user = db.session.query(Users).filter(Users.email==form.email.data).first()
+            if not user:
+                try:
+                    acesso = Acessos.query.filter_by(tipo='Cliente').first()
+                    users = Users(nome=form.nome.data.title(), email=form.email.data.lower(), password=bcrypt.generate_password_hash(form.password.data).decode('utf-8'), endereco=[endereco], acesso=[acesso])
+                    db.session.add(users)
+                    db.session.commit()
+                except Exception as e:
+                    print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                flash('Usuário criado com sucesso.', 'success')
+                return redirect(url_for('users.login'))
+            else:
+                flash('E-mail já cadastrado, faça login ou realize reset de senha.', 'danger')
+                return redirect(url_for('users.login'))
 
         return render_template('users/cadastro.html', title='Create Users', form=form)

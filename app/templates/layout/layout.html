@@ -26,6 +26,11 @@
             {% else %}
               <li><a href="{{url_for('users.login')}}" class="text-white">Login</a></li>
             {% endif %}
+            {%if current_user.is_authenticated %}
+              {% if current_user.acesso[0].tipo == 'Funcionario'%}
+                <li><a href="{{url_for('lanchonete.salaoLanchonete')}}" class="text-white">Acesso-Lanchonete</a></li>
+              {% endif %}
+            {% endif %}
             <li><a href="#" class="text-white">Menu - Cardápio</a></li>
             <li><a href="#" class="text-white">Contate o desenvolvedor</a></li>
           </ul>

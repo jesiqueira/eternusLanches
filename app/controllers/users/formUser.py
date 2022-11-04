@@ -1,5 +1,3 @@
-from wsgiref import validate
-from xmlrpc.client import Boolean
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, HiddenField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, Length, ValidationError, Email, EqualTo

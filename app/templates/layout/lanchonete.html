@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{title}}</title>
+
+        <link rel="stylesheet" href="{{url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}"/>
+    </head>
+    <body>
+      <header class="p-3 text-bg-warning">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <li><a href="{{url_for('home.index')}}" class="nav-link px-2 text-secondary">Eternus Lanches</a></li>
+              <li><a href="{{url_for('lanchonete.salaoLanchonete')}}" class="nav-link px-2 text-white">Salão</a></li>
+              <li><a href="{{url_for('lanchonete.lanches')}}" class="nav-link px-2 text-white">Lanches</a></li>
+              <li><a href="{{url_for('lanchonete.porcoes')}}" class="nav-link px-2 text-white">Porções</a></li>
+              <li><a href="{{url_for('lanchonete.bebidas')}}" class="nav-link px-2 text-white">Bebidas</a></li>
+              <li><a href="{{url_for('lanchonete.mesas')}}" class="nav-link px-2 text-white">Mesas</a></li>
+              <ul class="navbar-nav px-2">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Usuários
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-white">
+                    <li><a class="dropdown-item" href="#">Funcionários</a></li>
+                    <li><a class="dropdown-item" href="#">Clientes</a></li>
+                  </ul>
+                </li>
+              </ul>
+              <li><a href="{{url_for('lanchonete.pedidos')}}" class="nav-link px-2 text-white">Pedidos <span class="badge text-bg-secondary">02</span></a></li>
+            </ul>
+            
+            <div class="text-end">
+              <a class="btn btn-outline-light me-2" href="{{url_for('users.logout')}}" role="button">Logof</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      {% with messages = get_flashed_messages(with_categories=true)%}
+        {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{category}}">
+                  {{message}}
+              </div>
+            {% endfor %}
+        {%endif%}
+      {%endwith%}
+      <main>
+          {% block content %} {% endblock content %}
+      </main>
+    </body>
+    <script src="{{url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+</html>
