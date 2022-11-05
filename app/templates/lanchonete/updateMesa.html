@@ -1,0 +1,50 @@
+{% extends 'layout/lanchonete.html' %}
+
+{% block content %}
+<div class="container">
+    <main class="h-100 p-5 bg-light border rounded-3 mt-4">
+        <form action="" method="POST" class="row g-3">
+            {{form.hidden_tag()}}
+            <fieldset>
+                <legend class="text-center mt-4">Atualizar dados da mesa na lanchonete</legend>            
+            </fieldset>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Número</span>
+                            {% if form.numero.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.numero(class='form-control is-invalid', placeholder='Informe seu numero')}}
+                                    {{form.numero.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.numero.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.numero(class='form-control', placeholder='Informe seu numero')}}
+                                    {{form.numero.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-outline-info"><i class="fa-solid fa-floppy-disk"></i> Atualizar Mesa</button>
+                <a href="{{url_for('lanchonete.mesas')}}" class="btn btn-outline-danger ms-3"><i class="fa-solid fa-xmark"></i> Cancelar</a> 
+            </div>
+        </form>
+    </main>
+     <!-- <div class="form-check form-check-inlinee mt-4">
+        {% for i in form.tipoDispositivo %}
+            {{i}}
+            {{i.label(class='form-check-label')}}
+            &nbsp;&nbsp;
+        {% endfor %}
+    </div> -->
+</div>
+{% endblock content %}

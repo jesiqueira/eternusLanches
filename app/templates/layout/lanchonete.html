@@ -6,6 +6,9 @@
         <title>{{title}}</title>
 
         <link rel="stylesheet" href="{{url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}"/>
+        <link rel="stylesheet" href="{{url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/fontawesome.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/brands.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='node_modules/@fortawesome/fontawesome-free/css/solid.css')}}">
     </head>
     <body>
       <header class="p-3 text-bg-warning">
@@ -52,4 +55,5 @@
       </main>
     </body>
     <script src="{{url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/mesa.js')}}"></script>
 </html>

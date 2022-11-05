@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="container">
-    <header>
+    <header class="h-100 p-5 bg-light border rounded-3 mt-4">
         <form action="" method="POST" class="row g-3">
-            <fieldset>
+            <!-- <fieldset>
                 <legend class="text-center mt-4">Lista de Mesas Cadastradas</legend>
-            </fieldset>
+            </fieldset> -->
             <div class="col md-3">
                 {{form.consultar(class='form-control', placeholder='Digita aqui a consulta')}}
             </div>
@@ -15,10 +15,57 @@
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-success ml-4"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
-                <a class="btn btn-primary ml-3" href=" " role="button"><i class="fa-regular fa-file-pdf"></i> Nova</a>
+                <a class="btn btn-primary ml-3" href="{{url_for('lanchonete.novaMesa')}}" role="button"><i class="fa-solid fa-plus"></i> Nova</a>
                 <a class="btn btn-warning ml-3" href=" " role="button"><i class="fa-regular fa-file-pdf"></i> PDF</a>
             </div>
         </form>
     </header>
+    <main>
+        <fieldset>
+            <legend class="text-center mt-4">Mesas cadastradas na lanchonete</legend>
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Número da Mesa</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mesa in mesas%}
+                    <tr>
+                        <td scope="row">{{mesa.numero}}</td>
+                        <td scope="row">
+                            <!-- Button trigger modal -->
+                            <button onclick="editarMesa('{{mesa.id}}')" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mesaModal">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+    </main>
+    <!-- Modal -->
+    <div class="modal fade" id="mesaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mesaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="mesaModalLabel">Escolha umas das opções</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="idMesa" id="idMesa">
+                <div class="bd-content ps-lg-2">
+                    <button type="button" onclick="updateMesa()" class="btn btn-primary px-5 ms-5">Editar</button>
+                    <button type="button" onclick="deleteMesa()" class="btn btn-danger px-5 ms-5">Excluir</button>
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+    </div>
 </div>
 {% endblock content %}
