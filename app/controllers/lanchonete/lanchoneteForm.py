@@ -20,6 +20,7 @@ class LancheConsultaForm(FlaskForm):
 
 
 class LancheForm(FlaskForm):
+    id_lanche = HiddenField()
     nome = StringField('Nome do Lanche', validators=[DataRequired()])
     valor = FloatField('Valor do Lanche', validators=[
                        DataRequired(message='Somente números')])

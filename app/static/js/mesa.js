@@ -6,7 +6,6 @@ function editarMesa(idMesa) {
 function updateMesa() {
   var idMesa = document.querySelector("#idMesa").value;
   var url = "/atualizarMesa";
-  console.log(idMesa);
   var form = document.createElement("form");
   form.action = url;
   form.method = "POST";

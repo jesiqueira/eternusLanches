@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, Blueprint, request, abort
 from flask_login import current_user, login_required
-from app.controllers.lanchonete.lanchoneteForm import (MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm)
+from app.controllers.lanchonete.lanchoneteForm import (
+    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm)
 from app.models.bdEternusLanches import Mesas, Lanches
 from app import db
 from sqlalchemy import exc
@@ -29,7 +30,7 @@ def mesas():
         if current_user.acesso[0].tipo == 'Funcionario':
             form = MesasForm()
             mesas = Mesas.query.all()
-            return render_template('lanchonete/mesas.html', title='Mesas', form=form, mesas=mesas)
+            return render_template('lanchonete/mesas/mesas.html', title='Mesas', form=form, mesas=mesas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -63,7 +64,7 @@ def novaMesa():
                     flash('Mesa já está cadastrada', 'danger')
                     return redirect(request.referrer)
 
-            return render_template('lanchonete/novaMesa.html', title='Mesas', form=form)
+            return render_template('lanchonete/mesas/novaMesa.html', title='Mesas', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -82,7 +83,7 @@ def atualizarMesa():
                 mesa = Mesas.query.get(int(request.form.get('idMesa')))
                 form.id_mesa.data = mesa.id
                 form.numero.data = mesa.numero
-                return render_template('lanchonete/updateMesa.html', title='Atualizar Mesa', form=form)
+                return render_template('lanchonete/mesas/updateMesa.html', title='Atualizar Mesa', form=form)
             if form.validate_on_submit():
                 mesa = Mesas.query.get(int(form.id_mesa.data))
                 mesa.numero = int(form.numero.data)
@@ -98,7 +99,7 @@ def atualizarMesa():
                 flash('Mesa atualizada com sucesso.', 'success')
                 return redirect(url_for('lanchonete.mesas'))
             else:
-                return render_template('lanchonete/updateMesa.html', title='Atualizar Mesa', form=form)
+                return render_template('lanchonete/mesas/updateMesa.html', title='Atualizar Mesa', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -117,7 +118,7 @@ def removerMesa():
                 mesa = Mesas.query.get(int(request.form.get('idMesa')))
                 form.id_mesa.data = mesa.id
                 form.numero.data = mesa.numero
-                return render_template('lanchonete/removerMesa.html', title='Remover Mesa', form=form)
+                return render_template('lanchonete/mesas/removerMesa.html', title='Remover Mesa', form=form)
             if form.validate_on_submit():
                 mesa = Mesas.query.get(int(form.id_mesa.data))
                 mesa.numero = int(form.numero.data)
@@ -131,7 +132,7 @@ def removerMesa():
                 flash('Mesa removida com sucesso.', 'success')
                 return redirect(url_for('lanchonete.mesas'))
             else:
-                return render_template('lanchonete/removerMesa.html', title='Remover Mesa', form=form)
+                return render_template('lanchonete/mesas/removerMesa.html', title='Remover Mesa', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -140,19 +141,50 @@ def removerMesa():
         return redirect(url_for('users.login'))
 
 
-@lanchonete.route('/lanches', methods=['GET'])
+@lanchonete.route('/atualizarlanche', methods=['GET', 'POST'])
 @login_required
-def lanches():
+def atualizarLanches():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = LancheForm()
-            return render_template('lanchonete/lanches.html', title='Lanches', form=form)
+            if request.method == 'POST' and request.form.get('idLanche'):
+                # print(f"Update: {type(request.form.get('idLanche'))}")
+                lanche = Lanches.query.get(request.form.get('idLanche'))
+                form.id_lanche.data = lanche.id
+                form.nome.data = lanche.nome
+                form.valor.data = lanche.valor
+                form.ingrediente.data = lanche.ingrediente
+                return render_template('lanchonete/lanches/updateLanche.html', title='Atualizar lanche', form=form)
+            if form.validate_on_submit():
+                lanche = Lanches.query.get(int(form.id_lanche.data))
+                lanche.nome = form.nome.data
+                lanche.valor = float(form.valor.data)
+                lanche.ingrediente = form.ingrediente.data
+                try:
+                    db.session.commit()
+                except exc.IntegrityError as e:
+                    # print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                    flash('Erro ao atualizar.', 'danger')
+                    return redirect(url_for('lanchonete.lanches'))
+                flash('Lanche atualizada com sucesso.', 'success')
+                return redirect(url_for('lanchonete.lanchesView'))
+            else:
+                return render_template('lanchonete/lanches/lanches.html', title='Lanches', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
     else:
         flash('Faça o login para acessar essa página.', 'danger')
         return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/removerlanche', methods=['GET', 'POST'])
+@login_required
+def removerLanche():
+    pass
+
 
 @lanchonete.route('/lanchesView', methods=['GET'])
 @login_required
@@ -160,7 +192,8 @@ def lanchesView():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = LancheConsultaForm()
-            return render_template('lanchonete/lanchesView.html', title='Lanches', form=form)
+            lanches = Lanches.query.all()
+            return render_template('lanchonete/lanches/lanchesView.html', title='Lanches', form=form, lanches=lanches)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -177,9 +210,11 @@ def novoLanche():
             form = LancheForm()
 
             if form.validate_on_submit():
-                lanche = db.session.query(Lanches).filter(Lanches.nome == form.nome.data.capitalize()).first()
+                lanche = db.session.query(Lanches).filter(
+                    Lanches.nome == form.nome.data.capitalize()).first()
                 if not lanche:
-                    lanche = Lanches(nome=form.nome.data.capitalize(), valor=float(form.valor.data), ingrediente=form.ingrediente.data.capitalize())
+                    lanche = Lanches(nome=form.nome.data.capitalize(), valor=float(
+                        form.valor.data), ingrediente=form.ingrediente.data.capitalize())
                     db.session.add(lanche)
                     try:
                         db.session.commit()
@@ -193,7 +228,7 @@ def novoLanche():
                     flash('Lanche já está cadastrada', 'danger')
                     return redirect(request.referrer)
 
-            return render_template('lanchonete/lanche.html', title='lanches', form=form)
+            return render_template('lanchonete/lanches/novoLanche.html', title='lanches', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -208,7 +243,7 @@ def porcoes():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = LancheForm()
-            return render_template('lanchonete/porcoes.html', title='Porcoes')
+            return render_template('lanchonete/porcoes/porcoes.html', title='Porcoes')
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -223,7 +258,7 @@ def bebidas():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = MesasForm()
-            return render_template('lanchonete/bebidas.html', title='Bebidas')
+            return render_template('lanchonete/bebidas/bebidas.html', title='Bebidas')
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -238,7 +273,7 @@ def pedidos():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = MesasForm()
-            return render_template('lanchonete/pedidos.html', title='Pedidos')
+            return render_template('lanchonete/pedidos/pedidos.html', title='Pedidos')
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))

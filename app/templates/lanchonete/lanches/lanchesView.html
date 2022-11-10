@@ -28,6 +28,7 @@
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">Nome do Lanche</th>
+                        <th scope="col">Ingrediente</th>
                         <th scope="col">Valor do Lanche</th>
                         <th scope="col">Ações</th>
                     </tr>
@@ -35,8 +36,10 @@
                 <tbody>
                     {% for lanche in lanches%}
                     <tr>
+                        <td scope="row">{{lanche.id}}</td>
                         <td scope="row">{{lanche.nome}}</td>
-                        <td scope="row">{{lanche.valor}}</td>
+                        <td scope="row">{{lanche.ingrediente}}</td>
+                        <td scope="row">R$ {{lanche.valor}}</td>
                         <td scope="row">
                             <!-- Button trigger modal -->
                             <button onclick="editarLanche('{{lanche.id}}')" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lancheModal">
@@ -58,7 +61,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" name="idMesa" id="idMesa">
+                <input type="hidden" name="idLanche" id="idLanche">
                 <div class="bd-content ps-lg-2">
                     <button type="button" onclick="updateLanche()" class="btn btn-primary px-5 ms-5">Editar</button>
                     <button type="button" onclick="deleteLanche()" class="btn btn-danger px-5 ms-5">Excluir</button>
