@@ -25,3 +25,10 @@ class LancheForm(FlaskForm):
     valor = FloatField('Valor do Lanche', validators=[
                        DataRequired(message='Somente números')])
     ingrediente = TextAreaField('Ingrediente', validators=[DataRequired()])
+
+
+class RemoverLancheForm(FlaskForm):
+    id_lanche = HiddenField()
+    nome = StringField('Nome do Lanche', )
+    valor = FloatField('Valor do Lanche')
+    ingrediente = TextAreaField('Ingrediente')

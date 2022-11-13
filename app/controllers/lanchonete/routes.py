@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, Blueprint, request, abort
 from flask_login import current_user, login_required
 from app.controllers.lanchonete.lanchoneteForm import (
-    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm)
+    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm)
 from app.models.bdEternusLanches import Mesas, Lanches
 from app import db
 from sqlalchemy import exc
@@ -183,7 +183,38 @@ def atualizarLanches():
 @lanchonete.route('/removerlanche', methods=['GET', 'POST'])
 @login_required
 def removerLanche():
-    pass
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = RemoverLancheForm()
+            if request.method == 'POST' and request.form.get('idLanche'):
+                # print(f"Update: {type(request.form.get('idLanche'))}")
+                lanche = Lanches.query.get(request.form.get('idLanche'))
+                form.id_lanche.data = lanche.id
+                form.nome.data = lanche.nome
+                form.valor.data = lanche.valor
+                form.ingrediente.data = lanche.ingrediente
+                return render_template('lanchonete/lanches/removerlanche.html', title='Remover lanche', form=form)
+            if form.validate_on_submit():
+                lanche = Lanches.query.get(int(form.id_lanche.data))
+                try:
+                    db.session.delete(lanche)
+                    db.session.commit()
+                except exc.IntegrityError as e:
+                    # print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                    flash('Erro ao remover.', 'danger')
+                    return redirect(url_for('lanchonete.lanches'))
+                flash('Lanche removido com sucesso.', 'success')
+                return redirect(url_for('lanchonete.lanchesView'))
+            else:
+                return render_template('lanchonete/lanches/removerlanche.html', title='Lanches', form=form)
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
 
 
 @lanchonete.route('/lanchesView', methods=['GET'])
