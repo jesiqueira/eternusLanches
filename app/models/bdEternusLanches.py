@@ -34,14 +34,14 @@ pedidoLanches = db.Table(
 )
 
 pedidoPorcoes = db.Table(
-    'pedidoLanches',
-    db.Column('idPorcao', db.Integer, db.ForeignKey('Porcao.id')),
+    'pedidoPorcoes',
+    db.Column('idPorcao', db.Integer, db.ForeignKey('Porcoes.id')),
     db.Column('idPedido', db.Integer, db.ForeignKey('Pedidos.id'))
 )
 
 pedidoBebidas = db.Table(
-    'pedidoLanches',
-    db.Column('idBebida', db.Integer, db.ForeignKey('Bebida.id')),
+    'pedidoBebidas',
+    db.Column('idBebida', db.Integer, db.ForeignKey('Bebidas.id')),
     db.Column('idPedido', db.Integer, db.ForeignKey('Pedidos.id'))
 )
 
@@ -124,8 +124,9 @@ class Pedidos(db.Model):
 
     entrega = db.relationship('Entregas', backref='pedidos', lazy=True)
     user = db.relationship('Users', secondary=pedidoUsers, backref='pedidos')
-    lanche = db.relationship(
-        'Lanches', secondary=pedidoLanches, backref='pedidos')
+    lanche = db.relationship('Lanches', secondary=pedidoLanches, backref='pedidos')
+    porcao = db.relationship('Porcoes', secondary=pedidoPorcoes, backref='pedidos')
+    bebida = db.relationship('Bebidas', secondary=pedidoBebidas, backref='pedidos')
 
     def __init__(self, dataHora=datetime.utcnow, codPedido='ET0123456789', idMesa=0) -> None:
         self.dataHora = dataHora
