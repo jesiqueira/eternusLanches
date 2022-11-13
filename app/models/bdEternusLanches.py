@@ -33,6 +33,18 @@ pedidoLanches = db.Table(
     db.Column('idPedido', db.Integer, db.ForeignKey('Pedidos.id'))
 )
 
+pedidoPorcoes = db.Table(
+    'pedidoLanches',
+    db.Column('idPorcao', db.Integer, db.ForeignKey('Porcao.id')),
+    db.Column('idPedido', db.Integer, db.ForeignKey('Pedidos.id'))
+)
+
+pedidoBebidas = db.Table(
+    'pedidoLanches',
+    db.Column('idBebida', db.Integer, db.ForeignKey('Bebida.id')),
+    db.Column('idPedido', db.Integer, db.ForeignKey('Pedidos.id'))
+)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -53,6 +65,38 @@ class Lanches(db.Model):
 
     def __repr__(self) -> str:
         return f"Lanches('{self.nome}', '{self.valor}', '{self.ingrediente}')"
+
+
+class Porcoes(db.Model):
+    __tablename__ = 'Porcoes'
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(40), unique=True, nullable=True)
+    valor = db.Column(db.Float, nullable=False)
+    descricao = db.Column(db.String(150), nullable=False)
+
+    def __init__(self, nome='', valor=0.00, descricao='....') -> None:
+        self.nome = nome
+        self.valor = valor
+        self.descricao = descricao
+
+    def __repr__(self) -> str:
+        return f"Lanches('{self.nome}', '{self.valor}', '{self.descricao}')"
+
+
+class Bebidas(db.Model):
+    __tablename__ = 'Bebidas'
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(40), unique=True, nullable=True)
+    valor = db.Column(db.Float, nullable=False)
+    alcoolica = db.Column(db.Boolean, nullable=False)
+
+    def __init__(self, nome='', valor=0.00, alcoolica=False) -> None:
+        self.nome = nome
+        self.valor = valor
+        self.alcoolica = alcoolica
+
+    def __repr__(self) -> str:
+        return f"Lanches('{self.nome}', '{self.valor}', '{self.alcoolica}')"
 
 
 class Mesas(db.Model):
@@ -80,7 +124,8 @@ class Pedidos(db.Model):
 
     entrega = db.relationship('Entregas', backref='pedidos', lazy=True)
     user = db.relationship('Users', secondary=pedidoUsers, backref='pedidos')
-    lanche = db.relationship('Lanches', secondary=pedidoLanches, backref='pedidos')
+    lanche = db.relationship(
+        'Lanches', secondary=pedidoLanches, backref='pedidos')
 
     def __init__(self, dataHora=datetime.utcnow, codPedido='ET0123456789', idMesa=0) -> None:
         self.dataHora = dataHora
@@ -95,7 +140,8 @@ class Entregas(db.Model):
     __tablename__ = 'Entregas'
     id = db.Column(db.Integer, primary_key=True)
     taxaEntrega = db.Column(db.Float)
-    idPedido = db.Column(db.Integer, db.ForeignKey('Pedidos.id'), nullable=False)
+    idPedido = db.Column(db.Integer, db.ForeignKey(
+        'Pedidos.id'), nullable=False)
     user = db.relationship('Users', secondary=entregaUsers, backref='entregas')
 
     def __init__(self, taxaEntrega=0.00, idPedido=0, user=[]) -> None:
@@ -114,7 +160,8 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(60), unique=True, nullable=False)
 
-    endereco = db.relationship('Enderecos', secondary=enderecoUsers, backref='users')
+    endereco = db.relationship(
+        'Enderecos', secondary=enderecoUsers, backref='users')
     acesso = db.relationship('Acessos', secondary=acessoUsers, backref='users')
 
     def __init__(self, nome='', email='', password='', endereco=[], acesso=[]) -> None:
