@@ -6,7 +6,7 @@
         <form action="" method="POST" class="row g-3">
             {{form.hidden_tag()}}
             <fieldset>
-                <legend class="text-center mt-4">Remover Lanche da lanchonete</legend>            
+                <legend class="text-center mt-4">Atualizar Porções na lanchonete</legend>            
             </fieldset>
             <div class="col-md-12">
                 <div class="row">
@@ -25,7 +25,7 @@
                                 </div>
                             {% else %}
                                 <div class="form-floating">
-                                    {{form.nome(class='form-control', placeholder='Informe seu nome', disabled=true)}}
+                                    {{form.nome(class='form-control', placeholder='Informe seu nome')}}
                                     {{form.nome.label()}}
                                 </div>
                             {% endif %}
@@ -46,7 +46,7 @@
                                 </div>
                             {% else %}
                                 <div class="form-floating">
-                                    {{form.valor(class='form-control', placeholder='Informe seu valor', disabled=true)}}
+                                    {{form.valor(class='form-control', placeholder='Informe seu valor')}}
                                     {{form.valor.label()}}
                                 </div>
                             {% endif %}
@@ -57,20 +57,20 @@
                     <div class="col mt-3">
                         <div class="input-group has-validation">
                             <span class="input-group-text">Descrição</span>
-                            {% if form.ingrediente.errors %}
+                            {% if form.descricao.errors %}
                                 <div class="form-floating is-invalid">
-                                    {{form.ingrediente(class='form-control is-invalid', placeholder='Informe seu ingrediente')}}
-                                    {{form.ingrediente.label()}}
+                                    {{form.descricao(class='form-control is-invalid', placeholder='Informe seu descrição')}}
+                                    {{form.descricao.label()}}
                                 </div>
                                 <div class="invalid-feedback">
-                                    {% for error in form.ingrediente.errors %}
+                                    {% for error in form.descricao.errors %}
                                         <span>{{ error }}</span>
                                     {% endfor %}
                                 </div>
                             {% else %}
                                 <div class="form-floating">
-                                    {{form.ingrediente(class='form-control', placeholder='Informe seu ingrediente', disabled=true)}}
-                                    {{form.ingrediente.label()}}
+                                    {{form.descricao(class='form-control', placeholder='Informe seu descrição')}}
+                                    {{form.descricao.label()}}
                                 </div>
                             {% endif %}
                         </div>
@@ -78,8 +78,8 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <button type="submit" class="btn btn-info"><i class="fa-solid fa-trash-can"></i> Remover Lanche</button>
-                 <a href="{{url_for('lanchonete.lanchesView')}}" class="btn btn-outline-danger ms-3"><i class="fa-solid fa-xmark"></i> Cancelar</a> 
+                <button type="submit" class="btn btn-info"><i class="fa-solid fa-floppy-disk"></i> Atualizar Porções</button>
+                 <a href="{{url_for('lanchonete.porcoes')}}" class="btn btn-outline-danger ms-3"><i class="fa-solid fa-xmark"></i> Cancelar</a> 
             </div>
         </form>
     </main>

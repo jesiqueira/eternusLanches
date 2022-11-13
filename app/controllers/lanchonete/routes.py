@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, Blueprint, request, abort
 from flask_login import current_user, login_required
 from app.controllers.lanchonete.lanchoneteForm import (
-    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm)
+    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm, RemoverPorcaoForm)
 from app.models.bdEternusLanches import Mesas, Lanches, Porcoes, Bebidas
 from app import db
 from sqlalchemy import exc
@@ -291,9 +291,11 @@ def novaPorcao():
         if current_user.acesso[0].tipo == 'Funcionario':
             form = PorcaoForm()
             if form.validate_on_submit():
-                porcao = db.session.query(Porcoes.nome).filter(Porcoes.nome == form.nome.data.capitalize()).first()
+                porcao = db.session.query(Porcoes.nome).filter(
+                    Porcoes.nome == form.nome.data.capitalize()).first()
                 if not porcao:
-                    porcao = Porcoes(nome=form.nome.data.capitalize(), valor=float(form.valor.data), descricao=form.descricao.data.capitalize())
+                    porcao = Porcoes(nome=form.nome.data.capitalize(), valor=float(
+                        form.valor.data), descricao=form.descricao.data.capitalize())
                     db.session.add(porcao)
                     try:
                         db.session.commit()
@@ -301,13 +303,15 @@ def novaPorcao():
                         print(f'Erro ao cadastrar porcao {e}')
                         db.session.flush()
                         db.session.rollback()
-                    flash(f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
+                    flash(
+                        f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
                     return redirect(url_for('lanchonete.porcoes'))
                 else:
                     form.nome.data = form.nome.data
                     form.descricao.data = form.descricao.data
                     form.valor.data = form.valor.data
-                    flash(f'Porção {porcao.nome} já está cadastrada!', 'warning')
+                    flash(
+                        f'Porção {porcao.nome} já está cadastrada!', 'warning')
                     return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
             return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
         else:
@@ -317,6 +321,83 @@ def novaPorcao():
         flash('Faça o login para acessar essa página.', 'danger')
         return redirect(url_for('users.login'))
 
+
+@lanchonete.route('/updatePorcao', methods=['POST'])
+@login_required
+def updatePorcao():
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = PorcaoForm()
+            if request.method == 'POST' and request.form.get('idPorcao'):
+                # print(f"Update: {type(request.form.get('idLanche'))}")
+                porcao = Porcoes.query.get(request.form.get('idPorcao'))
+                form.id_Porcao.data = porcao.id
+                form.nome.data = porcao.nome
+                form.valor.data = porcao.valor
+                form.descricao.data = porcao.descricao
+                return render_template('lanchonete/porcoes/updatePorcao.html', title='Atualizar Porcao', form=form)
+
+            if form.validate_on_submit():
+                porcao = Porcoes.query.get(int(form.id_Porcao.data))
+                porcao.nome = form.nome.data
+                porcao.valor = float(form.valor.data)
+                porcao.descricao = form.descricao.data
+                try:
+                    db.session.commit()
+                    flash('Porção atualizada com sucesso.', 'success')
+                    return redirect(url_for('lanchonete.porcoes'))
+                except exc.IntegrityError as e:
+                    # print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                    flash('Erro ao atualizar.', 'danger')
+                    return redirect(url_for('lanchonete.updatePorcao'))
+            else:
+                return render_template('lanchonete/porcoes/updatePorcao.html', title='Atualizar Porcao', form=form)
+            
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/removerPorcao', methods=['GET', 'POST'])
+@login_required
+def removerPorcao():
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = RemoverPorcaoForm()
+            if request.method == 'POST' and request.form.get('idPorcao'):
+                # print(f"Update: {type(request.form.get('idLanche'))}")
+                porcao = Porcoes.query.get(request.form.get('idPorcao'))
+                form.id_Porcao.data = porcao.id
+                form.nome.data = porcao.nome
+                form.valor.data = porcao.valor
+                form.descricao.data = porcao.descricao
+                return render_template('lanchonete/porcoes/removerPorcao.html', title='Remover porcao', form=form)
+            if form.validate_on_submit():
+                porcao = Porcoes.query.get(int(form.id_Porcao.data))
+                try:
+                    db.session.delete(porcao)
+                    db.session.commit()
+                except exc.IntegrityError as e:
+                    # print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                    flash('Erro ao remover.', 'danger')
+                    return redirect(url_for('lanchonete.removerPorcao'))
+                flash('Porção removido com sucesso.', 'success')
+                return redirect(url_for('lanchonete.porcoes'))
+            else:
+                return render_template('lanchonete/porcoes/removerPorcao.html', title='Remover Porção', form=form)
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
 
 @lanchonete.route('/bebidas', methods=['GET'])
 @login_required
