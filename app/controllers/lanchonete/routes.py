@@ -274,7 +274,8 @@ def porcoes():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = PorcaoConsultaForm()
-            return render_template('lanchonete/porcoes/porcoes.html', title='Porção', form=form)
+            porcoes = Porcoes.query.all()
+            return render_template('lanchonete/porcoes/porcoes.html', title='Porção View', form=form, porcoes=porcoes)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
