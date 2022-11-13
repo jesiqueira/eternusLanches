@@ -1,4 +1,6 @@
 laches = (id, nome, valor, ingredites)
+porcoes = (id, nome, valor, descricao)
+bebidas = (id, nome, valor, alcoolica)
 mesas = (id, numero, livre)
 pedidos = (id, dataHora, codPedido, idMesa)
 entregas = (id, taxaEntrega, idPedidos)
@@ -12,6 +14,8 @@ pedidoUsers = (idPedido, idUsers)
 enderecoUsers = (idUsers, idEndereco)
 acessoUsers = (idUsers, idAcesso)
 pedidoLanches = (idLanche, idPedido)
+pedidoPorcoes = (idPorcao, idPedido)
+pedidoBebidas = (idBebida, idPedido)
 
 
 

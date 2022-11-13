@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, Blueprint, request, abort
 from flask_login import current_user, login_required
 from app.controllers.lanchonete.lanchoneteForm import (
-    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm)
+    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm)
 from app.models.bdEternusLanches import Mesas, Lanches
 from app import db
 from sqlalchemy import exc
@@ -273,8 +273,27 @@ def novoLanche():
 def porcoes():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
-            form = LancheForm()
-            return render_template('lanchonete/porcoes/porcoes.html', title='Porcoes')
+            form = PorcaoConsultaForm()
+            return render_template('lanchonete/porcoes/porcoes.html', title='Porção', form=form)
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/novaPorcao', methods=['GET', 'POST'])
+@login_required
+def novaPorcao():
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = PorcaoForm()
+
+            if form.validate_on_submit():
+                print('Cadastrar porções')
+                return redirect(url_for('lanchonete.porcoes'))
+            return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))

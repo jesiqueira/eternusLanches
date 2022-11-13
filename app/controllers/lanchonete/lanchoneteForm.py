@@ -32,3 +32,15 @@ class RemoverLancheForm(FlaskForm):
     nome = StringField('Nome do Lanche', )
     valor = FloatField('Valor do Lanche')
     ingrediente = TextAreaField('Ingrediente')
+
+
+class PorcaoConsultaForm(FlaskForm):
+    consultar = StringField('Consulta', validators=[DataRequired()])
+    selection = SelectField(choices=['Nome', 'Id'])
+
+class PorcaoForm(FlaskForm):
+    idPorcao = HiddenField()
+    nome = StringField('Nome da Porção', validators=[DataRequired()])
+    valor = FloatField('Valor da Porção', validators=[
+                       DataRequired(message='Somente números')])
+    descricao = TextAreaField('Descrição', validators=[DataRequired()])
