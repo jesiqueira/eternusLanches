@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, Blueprint, request,
 from flask_login import current_user, login_required
 from app.controllers.lanchonete.lanchoneteForm import (
     MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm)
-from app.models.bdEternusLanches import Mesas, Lanches
+from app.models.bdEternusLanches import Mesas, Lanches, Porcoes, Bebidas
 from app import db
 from sqlalchemy import exc
 
@@ -289,10 +289,25 @@ def novaPorcao():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = PorcaoForm()
-
             if form.validate_on_submit():
-                print('Cadastrar porções')
-                return redirect(url_for('lanchonete.porcoes'))
+                porcao = db.session.query(Porcoes.nome).filter(Porcoes.nome == form.nome.data.capitalize()).first()
+                if not porcao:
+                    porcao = Porcoes(nome=form.nome.data.capitalize(), valor=float(form.valor.data), descricao=form.descricao.data.capitalize())
+                    db.session.add(porcao)
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        print(f'Erro ao cadastrar porcao {e}')
+                        db.session.flush()
+                        db.session.rollback()
+                    flash(f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
+                    return redirect(url_for('lanchonete.porcoes'))
+                else:
+                    form.nome.data = form.nome.data
+                    form.descricao.data = form.descricao.data
+                    form.valor.data = form.valor.data
+                    flash(f'Porção {porcao.nome} já está cadastrada!', 'warning')
+                    return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
             return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
