@@ -38,8 +38,12 @@
                     <tr>
                         <td scope="row">{{bebida.id}}</td>
                         <td scope="row">{{bebida.nome}}</td>
-                        <td scope="row">{{bebida.alcoolica}}</td>
                         <td scope="row">R$ {{bebida.valor}}</td>
+                        {% if bebida.alcoolica %}
+                            <td scope="row">Sim</td>
+                        {% else %}
+                            <td scope="row">Não</td>
+                        {% endif %}
                         <td scope="row">
                             <!-- Button trigger modal -->
                             <button onclick="editarBebida('{{bebida.id}}')" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bebidaModal">
