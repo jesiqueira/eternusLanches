@@ -1,0 +1,106 @@
+{% extends 'layout/lanchonete.html' %}
+
+{% block content %}
+<div class="container">
+    <main class="h-100 p-5 bg-light border rounded-3 mt-4">
+        <form action="" method="POST" enctype="multipart/form-data" class="row g-3">
+            {{form.hidden_tag()}}
+            <fieldset>
+                <legend class="text-center mt-4">Cadastro de Bebidas na lanchonete</legend>            
+            </fieldset>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Nome</span>
+                            {% if form.nome.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.nome(class='form-control is-invalid', placeholder='Informe seu nome')}}
+                                    {{form.nome.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.nome.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.nome(class='form-control', placeholder='Informe seu nome')}}
+                                    {{form.nome.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">R$</span>
+                            {% if form.valor.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.valor(class='form-control is-invalid', placeholder='Informe seu valor')}}
+                                    {{form.valor.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.valor.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.valor(class='form-control', placeholder='Informe seu valor')}}
+                                    {{form.valor.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mt-3">
+                        {{form.imagem.label(class='form-label')}}
+                        {{form.imagem(class='form-control')}}
+                        {% if form.imagem.errors %}
+                            {% for error in form.imagem.errors %}
+                                <span class="text-danger">{{ error }}</span><br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col my-3">
+                        <div class="form-check form-switch">
+                            {{form.alcoolica(class='form-check-input')}}
+                            {{form.alcoolica.label(class='form-check-label')}}
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="col mt-3">
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">Descrição</span>
+                            {% if form.alcoolica.errors %}
+                                <div class="form-floating is-invalid">
+                                    {{form.alcoolica(class='form-control is-invalid', placeholder='Informe seu descrição')}}
+                                    {{form.alcoolica.label()}}
+                                </div>
+                                <div class="invalid-feedback">
+                                    {% for error in form.alcoolica.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-floating">
+                                    {{form.alcoolica(class='form-control', placeholder='Informe seu descrição')}}
+                                    {{form.alcoolica.label()}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-info"><i class="fa-solid fa-floppy-disk"></i> Cadastrar Bebida</button>
+                 <a href="{{url_for('lanchonete.bebidas')}}" class="btn btn-outline-danger ms-3"><i class="fa-solid fa-xmark"></i> Cancelar</a> 
+            </div>
+        </form>
+    </main>
+</div>
+{% endblock content %}

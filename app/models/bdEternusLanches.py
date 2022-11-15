@@ -57,14 +57,16 @@ class Lanches(db.Model):
     nome = db.Column(db.String(40), unique=True, nullable=True)
     valor = db.Column(db.Float, nullable=False)
     ingrediente = db.Column(db.String(150), nullable=False)
+    img = db.column(db.String(20), nullable=False, default='default.jpg')
 
-    def __init__(self, nome='', valor=0.00, ingrediente='....') -> None:
+    def __init__(self, nome='', valor=0.00, ingrediente='....', img='') -> None:
         self.nome = nome
         self.valor = valor
         self.ingrediente = ingrediente
+        self.img = img
 
     def __repr__(self) -> str:
-        return f"Lanches('{self.nome}', '{self.valor}', '{self.ingrediente}')"
+        return f"Lanches('{self.nome}', '{self.valor}', '{self.ingrediente}', '{self.img}')"
 
 
 class Porcoes(db.Model):
@@ -73,14 +75,16 @@ class Porcoes(db.Model):
     nome = db.Column(db.String(40), unique=True, nullable=True)
     valor = db.Column(db.Float, nullable=False)
     descricao = db.Column(db.String(150), nullable=False)
+    img = db.column(db.String(20), nullable=False, default='default.jpg')
 
-    def __init__(self, nome='', valor=0.00, descricao='....') -> None:
+    def __init__(self, nome='', valor=0.00, descricao='....', img='') -> None:
         self.nome = nome
         self.valor = valor
         self.descricao = descricao
+        self.img = img
 
     def __repr__(self) -> str:
-        return f"Lanches('{self.nome}', '{self.valor}', '{self.descricao}')"
+        return f"Lanches('{self.nome}', '{self.valor}', '{self.descricao}', '{self.img}')"
 
 
 class Bebidas(db.Model):
@@ -89,14 +93,16 @@ class Bebidas(db.Model):
     nome = db.Column(db.String(40), unique=True, nullable=True)
     valor = db.Column(db.Float, nullable=False)
     alcoolica = db.Column(db.Boolean, nullable=False)
+    img = db.column(db.String(20), nullable=False, default='default.jpg')
 
-    def __init__(self, nome='', valor=0.00, alcoolica=False) -> None:
+    def __init__(self, nome='', valor=0.00, alcoolica=False, img='') -> None:
         self.nome = nome
         self.valor = valor
         self.alcoolica = alcoolica
+        self.img = img
 
     def __repr__(self) -> str:
-        return f"Lanches('{self.nome}', '{self.valor}', '{self.alcoolica}')"
+        return f"Lanches('{self.nome}', '{self.valor}', '{self.alcoolica}', '{self.img}')"
 
 
 class Mesas(db.Model):
@@ -124,9 +130,12 @@ class Pedidos(db.Model):
 
     entrega = db.relationship('Entregas', backref='pedidos', lazy=True)
     user = db.relationship('Users', secondary=pedidoUsers, backref='pedidos')
-    lanche = db.relationship('Lanches', secondary=pedidoLanches, backref='pedidos')
-    porcao = db.relationship('Porcoes', secondary=pedidoPorcoes, backref='pedidos')
-    bebida = db.relationship('Bebidas', secondary=pedidoBebidas, backref='pedidos')
+    lanche = db.relationship(
+        'Lanches', secondary=pedidoLanches, backref='pedidos')
+    porcao = db.relationship(
+        'Porcoes', secondary=pedidoPorcoes, backref='pedidos')
+    bebida = db.relationship(
+        'Bebidas', secondary=pedidoBebidas, backref='pedidos')
 
     def __init__(self, dataHora=datetime.utcnow, codPedido='ET0123456789', idMesa=0) -> None:
         self.dataHora = dataHora

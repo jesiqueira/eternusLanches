@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, HiddenField, IntegerField, FloatField, TextAreaField
+from wtforms import StringField, SelectField, HiddenField, IntegerField, FloatField, TextAreaField, BooleanField
 from wtforms.validators import DataRequired, Length, ValidationError
+from flask_wtf.file import FileField, FileAllowed
 
 
 class MesasForm(FlaskForm):
@@ -52,3 +53,16 @@ class RemoverPorcaoForm(FlaskForm):
     nome = StringField('Nome da Porção')
     valor = FloatField('Valor da Porção')
     descricao = TextAreaField('Descrição')
+
+
+class BebidaConsultaForm(FlaskForm):
+    consultar = StringField('Consulta', validators=[DataRequired()])
+    selection = SelectField(choices=['Nome', 'Id'])
+
+
+class BebidaForm(FlaskForm):
+    id_Porcao = HiddenField()
+    nome = StringField('Nome da bebida', validators=[DataRequired()])
+    valor = FloatField('Valor da bebida', validators=[DataRequired(message='Somente números')])
+    imagem = FileField('Imagem do suco', validators=[FileAllowed(['jpg', 'jpeg', 'png'], message='Somente formatos: jpg, png são permitidas.')])
+    alcoolica = BooleanField('Bebida alcoólica')
