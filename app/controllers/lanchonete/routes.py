@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for, Blueprint, request, abort, current_app
+from flask import render_template, flash, redirect, url_for, Blueprint, request, abort
 from flask_login import current_user, login_required
 from app.controllers.lanchonete.lanchoneteForm import (
-    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm, RemoverPorcaoForm, BebidaConsultaForm, BebidaForm)
+    MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm, RemoverPorcaoForm, BebidaConsultaForm, BebidaForm, RemoverBebidaForm)
 from app.models.bdEternusLanches import Mesas, Lanches, Porcoes, Bebidas
 from app import db
 from sqlalchemy import exc
@@ -312,13 +312,15 @@ def novaPorcao():
                         print(f'Erro ao cadastrar porcao {e}')
                         db.session.flush()
                         db.session.rollback()
-                    flash(f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
+                    flash(
+                        f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
                     return redirect(url_for('lanchonete.porcoes'))
                 else:
                     form.nome.data = form.nome.data
                     form.descricao.data = form.descricao.data
                     form.valor.data = form.valor.data
-                    flash(f'Porção {porcao.nome} já está cadastrada!', 'warning')
+                    flash(
+                        f'Porção {porcao.nome} já está cadastrada!', 'warning')
                     return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
             else:
                 return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
@@ -437,13 +439,15 @@ def novaBebida():
                     if form.imagem.data:
                         imagem_file = salvarImagem(form.imagem.data)
                     else:
-                        imagem_file='default.jpeg'
+                        imagem_file = 'default.jpeg'
 
-                    bebida = Bebidas(nome=form.nome.data.capitalize(), valor=form.valor.data, alcoolica=form.alcoolica.data, img=imagem_file)
+                    bebida = Bebidas(nome=form.nome.data.capitalize(
+                    ), valor=form.valor.data, alcoolica=form.alcoolica.data, img=imagem_file)
                     db.session.add(bebida)
                     try:
                         db.session.commit()
-                        flash(f'Bebida {bebida.nome} cadastrada com sucesso', 'success')
+                        flash(
+                            f'Bebida {bebida.nome} cadastrada com sucesso', 'success')
                         return redirect(url_for('lanchonete.bebidas'))
                     except Exception as e:
                         print(f'Error ao salvar: {e}')
@@ -455,11 +459,92 @@ def novaBebida():
                     form.descricao.data = form.descricao.data
                     form.valor.data = form.valor.data
                     form.imagem.data = form.imagem.data
-                    flash(f'Bebida {bebida.nome} já está cadastrada!', 'warning')
+                    flash(
+                        f'Bebida {bebida.nome} já está cadastrada!', 'warning')
                     return render_template('lanchonete/porcoes/novaPorcao.html', title='Bebidas', form=form)
-                    
+
             else:
                 return render_template('lanchonete/bebidas/novaBebida.html', title='Bebidas', form=form)
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/updateBebida', methods=['POST'])
+@login_required
+def updateBebidas():
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = BebidaForm()
+            if request.method == 'POST' and request.form.get('idBebida'):
+                # print(f"Update: {type(request.form.get('idLanche'))}")
+                bebida = Bebidas.query.get(request.form.get('idBebida'))
+                form.id_bebida.data = bebida.id
+                form.nome.data = bebida.nome
+                form.valor.data = bebida.valor
+                form.alcoolica.data = bebida.alcoolica
+                return render_template('lanchonete/bebidas/updateBebida.html', title='Atualizar Bebida', form=form)
+
+            if form.validate_on_submit():
+                bebida = Bebidas.query.get(int(form.id_bebida.data))
+                bebida.nome = form.nome.data
+                bebida.valor = float(form.valor.data)
+                bebida.alcoolica = form.alcoolica.data
+                if form.imagem.data:
+                    bebida.img = form.imagem.data
+                try:
+                    db.session.commit()
+                    flash('Bebida atualizada com sucesso.', 'success')
+                    return redirect(url_for('lanchonete.bebidas'))
+                except exc.IntegrityError as e:
+                    # print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                    flash('Erro ao atualizar.', 'danger')
+                    return redirect(url_for('lanchonete.updateBebida'))
+            else:
+                return render_template('lanchonete/bebidas/updateBebida.html', title='Atualizar Bebida', form=form)
+
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/removerBebida', methods=['GET', 'POST'])
+@login_required
+def removerBebida():
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = RemoverBebidaForm()
+            if request.method == 'POST' and request.form.get('idBebida'):
+                # print(f"Update: {type(request.form.get('idLanche'))}")
+                bebida = Bebidas.query.get(request.form.get('idBebida'))
+                form.id_bebida.data = bebida.id
+                form.nome.data = bebida.nome
+                form.valor.data = bebida.valor
+                form.alcoolica.data = bebida.alcoolica
+                return render_template('lanchonete/bebidas/removerBebida.html', title='Remover bebida', form=form)
+            if form.validate_on_submit():
+                bebida = Bebidas.query.get(int(form.id_bebida.data))
+                try:
+                    db.session.delete(bebida)
+                    db.session.commit()
+                except exc.IntegrityError as e:
+                    # print(f'Error: {e}')
+                    db.session.flush()
+                    db.session.rollback()
+                    flash('Erro ao remover.', 'danger')
+                    return redirect(url_for('lanchonete.removerBebida'))
+                flash('Bebida removida com sucesso.', 'success')
+                return redirect(url_for('lanchonete.bebidas'))
+            else:
+                return render_template('lanchonete/bebidas/removerBebida.html', title='Remover bebida', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
