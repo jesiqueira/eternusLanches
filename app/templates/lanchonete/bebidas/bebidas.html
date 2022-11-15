@@ -1,5 +1,77 @@
 {% extends 'layout/lanchonete.html' %}
 
 {% block content %}
-<h1>Bebidas</h1>
+<div class="container">
+    <header class="h-100 p-5 bg-light border rounded-3 mt-4">
+        <form action="" method="POST" class="row g-3">
+            <!-- <fieldset>
+                <legend class="text-center mt-4">Lista de Mesas Cadastradas</legend>
+            </fieldset> -->
+            <div class="col md-3">
+                {{form.consultar(class='form-control', placeholder='Digita aqui a consulta')}}
+            </div>
+            <div class="col md-4">
+                {{form.selection(class='form-select col-md-2 ml-3')}}
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success ml-4"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
+                <a class="btn btn-primary ml-3" href="{{url_for('lanchonete.novaBebida')}}" role="button"><i class="fa-solid fa-plus"></i> Nova</a>
+                <a class="btn btn-warning ml-3" href=" " role="button"><i class="fa-regular fa-file-pdf"></i> PDF</a>
+            </div>
+        </form>
+    </header>
+    <main>
+        <fieldset>
+            <legend class="text-center mt-4">Bebidas cadastradas na lanchonete</legend>
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Nome da Bebida</th>
+                        <th scope="col">Valor da Bebida</th>
+                        <th scope="col">Alcoólica</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bebida in bebidas%}
+                    <tr>
+                        <td scope="row">{{bebida.id}}</td>
+                        <td scope="row">{{bebida.nome}}</td>
+                        <td scope="row">{{bebida.alcoolica}}</td>
+                        <td scope="row">R$ {{bebida.valor}}</td>
+                        <td scope="row">
+                            <!-- Button trigger modal -->
+                            <button onclick="editarBebida('{{bebida.id}}')" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bebidaModal">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+    </main>
+    <!-- Modal -->
+    <div class="modal fade" id="bebidaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="bebidaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="bebidaModalLabel">Escolha umas das opções</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="idBebida" id="idBebida">
+                <div class="bd-content ps-lg-2">
+                    <button type="button" onclick="updateBebida()" class="btn btn-primary px-5 ms-5">Editar</button>
+                    <button type="button" onclick="deleteBebida()" class="btn btn-danger px-5 ms-5">Excluir</button>
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+    </div>
+</div>
 {% endblock content %}
