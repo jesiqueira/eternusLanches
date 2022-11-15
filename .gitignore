@@ -131,3 +131,5 @@ dmypy.json
 config.py
 migrations
 *.jpeg
+*.jpg
+*.png

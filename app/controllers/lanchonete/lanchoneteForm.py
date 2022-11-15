@@ -23,16 +23,16 @@ class LancheConsultaForm(FlaskForm):
 class LancheForm(FlaskForm):
     id_lanche = HiddenField()
     nome = StringField('Nome do Lanche', validators=[DataRequired()])
-    valor = FloatField('Valor do Lanche', validators=[
-                       DataRequired(message='Somente números')])
+    valor = FloatField('Valor do Lanche', validators=[DataRequired(message='Somente números')])
     ingrediente = TextAreaField('Ingrediente', validators=[DataRequired()])
-
+    imagem = FileField('Imagem do Lanche', validators=[FileAllowed(['jpg', 'jpeg', 'png'], message='Somente formatos: jpg, png são permitidas.')])
 
 class RemoverLancheForm(FlaskForm):
     id_lanche = HiddenField()
     nome = StringField('Nome do Lanche', )
     valor = FloatField('Valor do Lanche')
     ingrediente = TextAreaField('Ingrediente')
+    imagem = FileField('Imagem do Lanche', validators=[FileAllowed(['jpg', 'jpeg', 'png'], message='Somente formatos: jpg, png são permitidas.')])
 
 
 class PorcaoConsultaForm(FlaskForm):
@@ -43,9 +43,9 @@ class PorcaoConsultaForm(FlaskForm):
 class PorcaoForm(FlaskForm):
     id_Porcao = HiddenField()
     nome = StringField('Nome da Porção', validators=[DataRequired()])
-    valor = FloatField('Valor da Porção', validators=[
-                       DataRequired(message='Somente números')])
+    valor = FloatField('Valor da Porção', validators=[DataRequired(message='Somente números')])
     descricao = TextAreaField('Descrição', validators=[DataRequired()])
+    imagem = FileField('Imagem da Porção', validators=[FileAllowed(['jpg', 'jpeg', 'png'], message='Somente formatos: jpg, png são permitidas.')])
     
 
 class RemoverPorcaoForm(FlaskForm):
@@ -53,6 +53,7 @@ class RemoverPorcaoForm(FlaskForm):
     nome = StringField('Nome da Porção')
     valor = FloatField('Valor da Porção')
     descricao = TextAreaField('Descrição')
+    imagem = FileField('Imagem da Porção', validators=[FileAllowed(['jpg', 'jpeg', 'png'], message='Somente formatos: jpg, png são permitidas.')])
 
 
 class BebidaConsultaForm(FlaskForm):
