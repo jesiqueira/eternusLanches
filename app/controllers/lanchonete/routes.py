@@ -245,8 +245,12 @@ def novoLanche():
                 lanche = db.session.query(Lanches).filter(
                     Lanches.nome == form.nome.data.capitalize()).first()
                 if not lanche:
+                    if form.imagem.data:
+                        imagem_file = salvarImagem(form.imagem.data)
+                    else:
+                        imagem_file = 'default.jpeg'
                     lanche = Lanches(nome=form.nome.data.capitalize(), valor=float(
-                        form.valor.data), ingrediente=form.ingrediente.data.capitalize())
+                        form.valor.data), ingrediente=form.ingrediente.data.capitalize(), img=imagem_file)
                     db.session.add(lanche)
                     try:
                         db.session.commit()
@@ -259,8 +263,8 @@ def novoLanche():
                 else:
                     flash('Lanche já está cadastrada', 'danger')
                     return redirect(request.referrer)
-
-            return render_template('lanchonete/lanches/novoLanche.html', title='lanches', form=form)
+            else:
+                return render_template('lanchonete/lanches/novoLanche.html', title='lanches', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -295,8 +299,12 @@ def novaPorcao():
                 porcao = db.session.query(Porcoes.nome).filter(
                     Porcoes.nome == form.nome.data.capitalize()).first()
                 if not porcao:
+                    if form.imagem.data:
+                        imagem_file = salvarImagem(form.imagem.data)
+                    else:
+                        imagem_file = 'default.jpeg'
                     porcao = Porcoes(nome=form.nome.data.capitalize(), valor=float(
-                        form.valor.data), descricao=form.descricao.data.capitalize())
+                        form.valor.data), descricao=form.descricao.data.capitalize(), img=imagem_file)
                     db.session.add(porcao)
                     try:
                         db.session.commit()
@@ -304,17 +312,16 @@ def novaPorcao():
                         print(f'Erro ao cadastrar porcao {e}')
                         db.session.flush()
                         db.session.rollback()
-                    flash(
-                        f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
+                    flash(f'Porção {porcao.nome} cadastrada com sucesso.', 'success')
                     return redirect(url_for('lanchonete.porcoes'))
                 else:
                     form.nome.data = form.nome.data
                     form.descricao.data = form.descricao.data
                     form.valor.data = form.valor.data
-                    flash(
-                        f'Porção {porcao.nome} já está cadastrada!', 'warning')
+                    flash(f'Porção {porcao.nome} já está cadastrada!', 'warning')
                     return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
-            return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
+            else:
+                return render_template('lanchonete/porcoes/novaPorcao.html', title='Porcoes', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -407,7 +414,8 @@ def bebidas():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = BebidaConsultaForm()
-            return render_template('lanchonete/bebidas/bebidas.html', title='Bebidas', form=form)
+            bebidas = Bebidas.query.all()
+            return render_template('lanchonete/bebidas/bebidas.html', title='Bebidas', form=form, bebidas=bebidas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -423,11 +431,35 @@ def novaBebida():
         if current_user.acesso[0].tipo == 'Funcionario':
             form = BebidaForm()
             if form.validate_on_submit():
-                print('Opa passou')
-                imagem_file = salvarImagem(form.imagem.data)
-                print(imagem_file)
+                bebida = db.session.query(Bebidas.nome).filter(
+                    Bebidas.nome == form.nome.data.capitalize()).first()
+                if not bebida:
+                    if form.imagem.data:
+                        imagem_file = salvarImagem(form.imagem.data)
+                    else:
+                        imagem_file='default.jpeg'
 
-            return render_template('lanchonete/bebidas/novaBebida.html', title='Bebidas', form=form)
+                    bebida = Bebidas(nome=form.nome.data.capitalize(), valor=form.valor.data, alcoolica=form.alcoolica.data, img=imagem_file)
+                    db.session.add(bebida)
+                    try:
+                        db.session.commit()
+                        flash(f'Bebida {bebida.nome} cadastrada com sucesso', 'success')
+                        return redirect(url_for('lanchonete.bebidas'))
+                    except Exception as e:
+                        print(f'Error ao salvar: {e}')
+                        db.session.flush()
+                        db.session.rollback()
+                        return redirect(url_for('lanchonete.novaBebida'))
+                else:
+                    form.nome.data = form.nome.data
+                    form.descricao.data = form.descricao.data
+                    form.valor.data = form.valor.data
+                    form.imagem.data = form.imagem.data
+                    flash(f'Bebida {bebida.nome} já está cadastrada!', 'warning')
+                    return render_template('lanchonete/porcoes/novaPorcao.html', title='Bebidas', form=form)
+                    
+            else:
+                return render_template('lanchonete/bebidas/novaBebida.html', title='Bebidas', form=form)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))

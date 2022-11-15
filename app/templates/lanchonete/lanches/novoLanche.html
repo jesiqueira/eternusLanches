@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <main class="h-100 p-5 bg-light border rounded-3 mt-4">
-        <form action="" method="POST" class="row g-3">
+        <form action="" method="POST" class="row g-3" enctype="multipart/form-data">
             {{form.hidden_tag()}}
             <fieldset>
                 <legend class="text-center mt-4">Cadastro de Lanche na lanchonete</legend>            
@@ -74,6 +74,17 @@
                                 </div>
                             {% endif %}
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mt-3">
+                        {{form.imagem.label(class='form-label')}}
+                        {{form.imagem(class='form-control')}}
+                        {% if form.imagem.errors %}
+                            {% for error in form.imagem.errors %}
+                                <span class="text-danger">{{ error }}</span><br>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

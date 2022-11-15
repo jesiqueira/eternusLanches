@@ -57,7 +57,7 @@ class Lanches(db.Model):
     nome = db.Column(db.String(40), unique=True, nullable=True)
     valor = db.Column(db.Float, nullable=False)
     ingrediente = db.Column(db.String(150), nullable=False)
-    img = db.column(db.String(20), nullable=False, default='default.jpg')
+    img = db.Column(db.String(20), nullable=False, default='default.jpg')
 
     def __init__(self, nome='', valor=0.00, ingrediente='....', img='') -> None:
         self.nome = nome
@@ -75,7 +75,7 @@ class Porcoes(db.Model):
     nome = db.Column(db.String(40), unique=True, nullable=True)
     valor = db.Column(db.Float, nullable=False)
     descricao = db.Column(db.String(150), nullable=False)
-    img = db.column(db.String(20), nullable=False, default='default.jpg')
+    img = db.Column(db.String(20), nullable=False, default='default.jpg')
 
     def __init__(self, nome='', valor=0.00, descricao='....', img='') -> None:
         self.nome = nome
@@ -93,7 +93,7 @@ class Bebidas(db.Model):
     nome = db.Column(db.String(40), unique=True, nullable=True)
     valor = db.Column(db.Float, nullable=False)
     alcoolica = db.Column(db.Boolean, nullable=False)
-    img = db.column(db.String(20), nullable=False, default='default.jpg')
+    img = db.Column(db.String(20), nullable=False, default='default.jpg')
 
     def __init__(self, nome='', valor=0.00, alcoolica=False, img='') -> None:
         self.nome = nome
