@@ -4,7 +4,7 @@ from app.controllers.lanchonete.lanchoneteForm import (
     MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm, RemoverPorcaoForm, BebidaConsultaForm, BebidaForm, RemoverBebidaForm)
 from app.models.bdEternusLanches import Mesas, Lanches, Porcoes, Bebidas
 from app import db
-from sqlalchemy import exc
+from sqlalchemy import exc, asc, desc
 from app.controllers.lanchonete.uteis import salvarImagem
 
 lanchonete = Blueprint('lanchonete', __name__)
@@ -14,8 +14,8 @@ lanchonete = Blueprint('lanchonete', __name__)
 def salaoLanchonete():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
-            form = MesasForm()
-            return render_template('lanchonete/salao.html')
+            mesas = Mesas.query.order_by(asc(Mesas.numero)).all()
+            return render_template('lanchonete/salao/salao.html', mesas=mesas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
@@ -559,7 +559,22 @@ def pedidos():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = MesasForm()
-            return render_template('lanchonete/pedidos/pedidos.html', title='Pedidos')
+            return render_template('lanchonete/salao/pedidos.html', title='Pedidos')
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/pedidos/mesa/<int:idMesa>', methods=['GET'])
+@login_required
+def pedidosMesa(idMesa):
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            form = MesasForm()
+            return render_template('lanchonete/salao/pedidoMesa.html', title='Pedidos', idMesa=idMesa)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
