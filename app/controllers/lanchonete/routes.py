@@ -30,7 +30,7 @@ def mesas():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = MesasForm()
-            mesas = Mesas.query.all()
+            mesas = Mesas.query.order_by(asc(Mesas.numero)).all()
             return render_template('lanchonete/mesas/mesas.html', title='Mesas', form=form, mesas=mesas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
