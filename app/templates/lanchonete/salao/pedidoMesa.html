@@ -4,7 +4,7 @@
 <div class="container py-3">
     <!-- jumbotron -->
     <div class="h-100 p-5 text-bg-dark rounded-3">
-      <h1>Mesa {{idMesa}}</h1>
+      <h1 class="text-center">Mesa {{idMesa}}</h1>
       <p>Selecione abaixos os produtos para cadastrar.</p>
 
       
@@ -16,19 +16,10 @@
                 </div>
                 <div class="card-body">
                     <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                      <!-- <option selected>Open this select menu</option> -->
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
+                      <option selected>Abra o menu</option>
+                      {% for lanche in lanches %}
+                        <option value="{{lanche.id}}">{{lanche.nome}}</option>
+                      {% endfor %}
                     </select>
                     <button type="button" class="w-100 btn btn-lg btn-outline-danger">Adicionar</button>
                 </div>
@@ -41,19 +32,10 @@
                 </div>
                 <div class="card-body">
                     <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                      <!-- <option selected>Open this select menu</option> -->
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
+                      <option selected>Abra o menu</option>
+                      {% for porcao in porcoes %}
+                        <option value="{{porcao.id}}">{{porcao.nome}}</option>
+                      {% endfor %}
                     </select>
                     <button type="button" class="w-100 btn btn-lg btn-outline-danger">Adicionar</button>
                 </div>
@@ -66,19 +48,10 @@
                 </div>
                 <div class="card-body">
                     <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                      <!-- <option selected>Open this select menu</option> -->
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
-                      <option value="1">Frango catupiry</option>
-                      <option value="2">Lombo canadence</option>
-                      <option value="3">X-burge</option>
+                      <option selected>Abra o menu</option>
+                      {% for bebdica in bebidas %}
+                        <option value="{{bebdica.id}}">{{bebdica.nome}}</option>
+                      {% endfor %}
                     </select>
                     <button type="button" class="w-100 btn btn-lg btn-outline-danger">Adicionar</button>
                 </div>
@@ -115,7 +88,7 @@
       </div>
       <div class="row mt-4">
         <div class="col">
-          <button type="button" class="btn btn-danger">Fechar Mesa</button>
+          <button type="button" class="btn btn-danger">Enviar pedido</button>
         </div>
       </div>
     </div>

@@ -15,6 +15,7 @@ def salaoLanchonete():
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             mesas = Mesas.query.order_by(asc(Mesas.numero)).all()
+            
             return render_template('lanchonete/salao/salao.html', mesas=mesas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
@@ -574,7 +575,10 @@ def pedidosMesa(idMesa):
     if current_user.is_authenticated:
         if current_user.acesso[0].tipo == 'Funcionario':
             form = MesasForm()
-            return render_template('lanchonete/salao/pedidoMesa.html', title='Pedidos', idMesa=idMesa)
+            lanches = Lanches.query.order_by(asc(Lanches.nome)).all()
+            porcoes = Porcoes.query.order_by(asc(Porcoes.nome)).all()
+            bebidas = Bebidas.query.order_by(asc(Bebidas.nome)).all()
+            return render_template('lanchonete/salao/pedidoMesa.html', title='Pedidos', idMesa=idMesa, lanches=lanches, porcoes=porcoes, bebidas=bebidas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
