@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, Blueprint, request, abort
+from flask import render_template, flash, redirect, url_for, Blueprint, request, abort, session
 from flask_login import current_user, login_required
 from app.controllers.lanchonete.lanchoneteForm import (
     MesasForm, MesaNovaForm, LancheForm, LancheConsultaForm, RemoverLancheForm, PorcaoConsultaForm, PorcaoForm, RemoverPorcaoForm, BebidaConsultaForm, BebidaForm, RemoverBebidaForm)
@@ -579,6 +579,30 @@ def pedidosMesa(idMesa):
             porcoes = Porcoes.query.order_by(asc(Porcoes.nome)).all()
             bebidas = Bebidas.query.order_by(asc(Bebidas.nome)).all()
             return render_template('lanchonete/salao/pedidoMesa.html', title='Pedidos', idMesa=idMesa, lanches=lanches, porcoes=porcoes, bebidas=bebidas)
+        else:
+            flash('Não tem permissão para acessar essa página', 'danger')
+            return redirect(url_for('home.index'))
+    else:
+        flash('Faça o login para acessar essa página.', 'danger')
+        return redirect(url_for('users.login'))
+
+
+@lanchonete.route('/addCarrinho', methods=['POST'])
+@login_required
+def addCarrinho():
+    if current_user.is_authenticated:
+        if current_user.acesso[0].tipo == 'Funcionario':
+            DictItens = {'nome': {'Nome':'Jose Edmar'}}
+            if 'lanchoneteCarrinho' in session:
+                print(session['lanchoneteCarrinho'])
+            else:
+                session['lanchoneteCarrinho'] = DictItens
+
+            form = MesasForm()
+            lanches = Lanches.query.order_by(asc(Lanches.nome)).all()
+            porcoes = Porcoes.query.order_by(asc(Porcoes.nome)).all()
+            bebidas = Bebidas.query.order_by(asc(Bebidas.nome)).all()
+            return render_template('lanchonete/salao/pedidoMesa.html', title='Pedidos', lanches=lanches, porcoes=porcoes, bebidas=bebidas)
         else:
             flash('Não tem permissão para acessar essa página', 'danger')
             return redirect(url_for('home.index'))
